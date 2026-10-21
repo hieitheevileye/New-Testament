@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>New Testament</title>
+<style>
+@font-face{font-family:'Lora';font-weight:400;font-display:swap;src:url(fonts/lora-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Lora';font-weight:700;font-display:swap;src:url(fonts/lora-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-weight:400;font-display:swap;src:url(fonts/eb-garamond-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-weight:700;font-display:swap;src:url(fonts/eb-garamond-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Merriweather';font-weight:400;font-display:swap;src:url(fonts/merriweather-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Merriweather';font-weight:700;font-display:swap;src:url(fonts/merriweather-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'UnifrakturCook';font-weight:100 900;font-display:swap;src:url(fonts/unifrakturcook-latin-700-normal.woff2) format('woff2')}
+:root{--rf:Georgia,serif;--top:110px;--ink:#3a3025;--paper:#f8f0dc;--bar:#f3ead6;--line:#d8cbb0;--red:#a8281e}
+*{-webkit-tap-highlight-color:transparent}
+body{font-family:Georgia,serif;margin:0;padding-top:var(--top);background:#e9dfc7;color:var(--ink)}
+button{color:var(--ink);font-family:inherit}
+#top{position:fixed;top:0;left:0;right:0;z-index:100;padding-top:env(safe-area-inset-top,0);background:var(--bar);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;box-sizing:border-box}
+#title{font:bold 20px Georgia,serif;background:none;border:0;padding:4px}
+.ic{background:none;border:0;padding:6px 8px;font:bold 15px sans-serif;border-radius:8px}
+.ic svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.ic.on{color:#e08a00}.ic.on svg{fill:currentColor}
+.bm{background:#efe3c6;border-top:1px solid #dccb9f;padding:6px 14px}
+#bmtxt{font:600 13px sans-serif;color:#7a5f45;background:none;border:0;padding:2px 0;text-align:left}
+.content{max-width:650px;margin:0 auto;padding:20px;line-height:1.8;background:var(--paper);min-height:100vh;box-sizing:border-box}
+.t{font-family:var(--rf);position:relative;column-gap:0;column-fill:auto}
+.t p{margin:0 0 .7em;padding:2px 6px;border-radius:6px;scroll-margin-top:calc(var(--top) + 8px)}
+.t p.sel{background:#f1dfaa}
+.vn{color:#9c9078;font:bold .68em sans-serif;vertical-align:super;margin-right:4px}
+.red{color:var(--red);font-weight:500}
+.t.gothic .red{font-weight:700}
+.na{color:#857a65;font-style:italic}
+.nav{display:flex;justify-content:space-between;margin:24px 0 80px}
+.nav button,#pbar button{font:bold 15px sans-serif;border:1px solid #d1c3a3;background:var(--bar);border-radius:20px;padding:10px 18px}
+#pbar{display:none}
+/* page-flip mode */
+.content{position:relative}
+body.flip{overflow:hidden;height:100vh}
+body.flip .content{overflow:hidden;min-height:0;padding:12px 20px 0;touch-action:none;user-select:none;-webkit-user-select:none;height:calc(100vh - var(--top) - 56px - env(safe-area-inset-bottom,0px));height:calc(100dvh - var(--top) - 56px - env(safe-area-inset-bottom,0px))}
+body.flip .content::after{content:'';position:absolute;left:0;top:0;bottom:0;width:24px;background:linear-gradient(to right,rgba(60,40,15,.16),rgba(60,40,15,0));pointer-events:none;z-index:8}
+body.flip #pg{height:100%;overflow:hidden}
+body.flip #txt{height:100%}
+body.flip .nav{display:none}
+body.flip #pbar{display:flex;position:fixed;bottom:0;left:0;right:0;height:56px;padding-bottom:env(safe-area-inset-bottom,0px);align-items:center;justify-content:space-between;padding-left:16px;padding-right:16px;background:var(--bar);border-top:1px solid var(--line);z-index:90}
+#pn{font:600 14px sans-serif;color:#7a5f45}
+.stage{position:absolute;inset:0;overflow:hidden;z-index:5;background:var(--paper)}
+.leaf{position:absolute;inset:0;background:var(--paper);overflow:hidden}
+.win{position:absolute;overflow:hidden}
+.fw{position:absolute;inset:0;transform-origin:0 0;filter:drop-shadow(0 0 9px rgba(50,35,15,.45))}
+.fi{position:absolute;inset:0;background:#eadfc3}
+.fi .leaf{opacity:.3;background:transparent}
+.su,.fsh{position:absolute;left:0;transform-origin:0 0;pointer-events:none}
+.su{width:90px;background:linear-gradient(to right,rgba(50,35,15,.4),rgba(50,35,15,.12) 30%,rgba(50,35,15,0))}
+.fsh{width:170px;background:linear-gradient(to right,rgba(40,25,5,.3),rgba(255,255,255,.25) 18%,rgba(255,255,255,0))}
+#pk{position:fixed;inset:0;background:var(--paper);z-index:200;overflow:auto;padding-top:env(safe-area-inset-top,0)}
+#pk header{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--line);padding:14px;font:bold 18px Georgia,serif;display:flex;justify-content:space-between}
+#pk header button{border:0;background:none;font-size:20px}
+.list button{display:block;width:100%;text-align:left;padding:14px 20px;border:0;border-bottom:1px solid #e6dac0;background:var(--paper);font:17px Georgia,serif}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px}
+.grid button{padding:14px 0;border:1px solid #d1c3a3;border-radius:10px;background:var(--bar);font:16px sans-serif}
+#set{position:fixed;inset:0;background:rgba(60,45,25,.3);z-index:300}
+#set .card{position:absolute;right:12px;top:calc(var(--top) + 4px);width:250px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+#set h4{margin:4px 0 8px;font:600 12px sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#7a5f45}
+.seg{display:flex;gap:6px;margin-bottom:14px}
+.seg button{flex:1;padding:10px 4px;border:1px solid #d1c3a3;background:var(--bar);border-radius:10px;font:14px sans-serif}
+.seg button.act{background:#d9c49a;border-color:#b79f6d;font-weight:bold}
+.fonts{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.fonts button{text-align:left;padding:9px 12px;border:1px solid #d1c3a3;background:var(--bar);border-radius:10px;font-size:17px}
+.fonts button.act{background:#d9c49a;border-color:#b79f6d}
+.bml{display:flex;align-items:stretch;border-bottom:1px solid #e6dac0}
+.bml .go{flex:1;text-align:left;padding:14px 20px;border:0;background:var(--paper);font:17px Georgia,serif}
+.bml .go small{display:block;font:12px sans-serif;color:#9c9078;margin-top:2px}
+.bml .del{border:0;background:var(--paper);padding:0 18px;font-size:18px;color:#a8281e}
+.empty{padding:40px 24px;text-align:center;color:#857a65;font-style:italic}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#4a3b28;color:#f8f0dc;padding:10px 18px;border-radius:20px;font:600 14px sans-serif;z-index:400;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.show{opacity:1}
+[hidden]{display:none!important}
+</style></head><body>
+<div id="top">
+  <div class="bar"><button id="title"></button><span><button id="bl" class="ic" aria-label="View bookmarks"><svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></button><button id="gear" class="ic">Aa</button><button id="bk" class="ic" aria-label="Bookmark this page"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></span></div>
+  <div class="bar bm"><button id="bmtxt"></button></div>
+</div>
+<div class="content" id="content"><div id="pg"><div id="txt" class="t"></div></div>
+  <div class="nav"><button id="prev">← Previous</button><button id="next">Next →</button></div></div>
+<div id="pbar"><button id="pp">‹ Back</button><span id="pn"></span><button id="pnx">Next ›</button></div>
+<div id="set" hidden><div class="card">
+  <h4>Reading mode</h4>
+  <div class="seg"><button data-m="scroll">↕ Scroll</button><button data-m="flip">📖 Page flip</button></div>
+  <h4>Font</h4>
+  <div class="fonts" id="fonts"></div>
+  <h4>Text size</h4>
+  <div class="seg"><button id="fm">A−</button><button id="fp">A+</button></div>
+</div></div>
+<div id="pk" hidden><header><span id="pkt"></span><button id="pkx">✕</button></header><div id="pkb"></div></div>
+<div id="toast"></div>
+<!--SAMPLE-->
+<script>
+const BOOKS=[["MAT","Matthew",28],["MRK","Mark",16],["LUK","Luke",24],["JHN","John",21],["ACT","Acts",28],["ROM","Romans",16],["1CO","1 Corinthians",16],["2CO","2 Corinthians",13],["GAL","Galatians",6],["EPH","Ephesians",6],["PHP","Philippians",4],["COL","Colossians",4],["1TH","1 Thessalonians",5],["2TH","2 Thessalonians",3],["1TI","1 Timothy",6],["2TI","2 Timothy",4],["TIT","Titus",3],["PHM","Philemon",1],["HEB","Hebrews",13],["JAS","James",5],["1PE","1 Peter",5],["2PE","2 Peter",3],["1JN","1 John",5],["2JN","2 John",1],["3JN","3 John",1],["JUD","Jude",1],["REV","Revelation",22]];
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const book=c=>BOOKS.find(b=>b[0]===c);
+let NT={},P=0,N=1,W=0,S={b:'JHN',c:14,fs:19,font:'georgia',mode:'scroll',bms:null,sel:null,bm:{b:'JHN',c:14,v:1}};
+try{Object.assign(S,JSON.parse(localStorage.getItem('ntapp')||'{}'))}catch(e){}
+if(!S.bms)S.bms=S.bm?[Object.assign({t:0},S.bm)]:[];
+const FONTS=[['georgia','Georgia','Georgia,serif'],['lora','Lora',"'Lora',Georgia,serif"],['garamond','EB Garamond',"'EB Garamond',Georgia,serif"],['merri','Merriweather',"'Merriweather',Georgia,serif"],['gothic','Gothic (Fraktur)',"'UnifrakturCook','Old English Text MT',serif"]];
+const fontDef=()=>FONTS.find(f=>f[0]===S.font)||FONTS[0];
+function applyFont(){document.documentElement.style.setProperty('--rf',fontDef()[2]);
+  document.querySelectorAll('.t').forEach(t=>t.classList.toggle('gothic',S.font==='gothic'));
+  $('fonts').innerHTML=FONTS.map(f=>`<button data-f="${f[0]}" style="font-family:${f[2]}" class="${f[0]===S.font?'act':''}">${f[1]}</button>`).join('')}
+const persist=()=>{try{localStorage.setItem('ntapp',JSON.stringify(S))}catch(e){}};
+const flipMode=()=>S.mode==='flip';
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
+let Wc=0,Hc=0,GX=0,GY=0,H=0,busy=false;
+function setGeo(){const c=$('content'),g=$('pg');Wc=c.clientWidth;Hc=c.clientHeight;W=g.clientWidth;H=g.clientHeight;GX=g.offsetLeft;GY=g.offsetTop}
+function layout(){setGeo();const t=$('txt');t.style.width=W+'px';t.style.columnWidth=W+'px';N=Math.max(1,Math.round(t.scrollWidth/W))}
+function showPage(){P=Math.min(Math.max(P,0),N-1);$('txt').style.transform=`translateX(${-P*W}px)`;$('pn').textContent=(P+1)+' / '+N}
+function chapHTML(b,c,sel){const v=(NT[b]||[])[c-1];
+  return v&&v.length?v.map(([n,t])=>`<p data-v="${n}" class="${sel==n?'sel':''}"><span class="vn">${n}</span>${esc(t).replace(/⟦/g,'<span class="red">').replace(/⟧/g,'</span>')}</p>`).join(''):'<p class="na">Chapter text is unavailable.</p>'}
+function render(land){
+  applyFont();
+  document.body.classList.toggle('flip',flipMode());
+  $('title').textContent=book(S.b)[1]+' '+S.c+' ▾';
+  $('bmtxt').textContent='🔖 Last Saved: '+book(S.bm.b)[1]+' '+S.bm.c+':'+S.bm.v;
+  $('txt').style.fontSize=S.fs+'px';
+  $('txt').innerHTML=chapHTML(S.b,S.c,S.sel);
+  document.documentElement.style.setProperty('--top',$('top').offsetHeight+'px');
+  document.querySelectorAll('.seg [data-m]').forEach(b=>b.classList.toggle('act',b.dataset.m===S.mode));
+  const t=$('txt');
+  if(flipMode()){t.style.width='';t.style.columnWidth='';layout();P=land==='end'?N-1:0;showPage()}
+  else{t.style.width=t.style.columnWidth=t.style.transform=''}
+}
+function go(b,c,v,sel,land){S.b=b;S.c=c;S.sel=v&&sel?v:null;persist();render(land);
+  const el=v&&document.querySelector(`#txt p[data-v="${v}"]`);
+  if(flipMode()){if(el){P=Math.floor(el.offsetLeft/W);showPage()}}
+  else if(el)el.scrollIntoView();else window.scrollTo(0,0)}
+function nextCh(d){let i=BOOKS.findIndex(b=>b[0]===S.b),c=S.c+d;
+  if(c<1){if(i===0)return null;i--;c=BOOKS[i][2]}else if(c>BOOKS[i][2]){if(i===26)return null;i++;c=1}
+  return [BOOKS[i][0],c]}
+function chapter(d){const n=nextCh(d);if(n)go(n[0],n[1],0,0,d<0?'end':'start')}
+
+/* ---- realistic page curl ---- */
+const el=(tag,cls)=>{const e=document.createElement(tag);e.className=cls;return e};
+function makeLayer(b,c,idx,st){
+  const L=el('div','leaf'),w=el('div','win'),t=el('div','t');
+  w.style.cssText=`left:${GX}px;top:${GY}px;width:${W}px;height:${H}px`;
+  t.innerHTML=chapHTML(b,c,b===S.b&&c===S.c?S.sel:null);t.classList.toggle('gothic',S.font==='gothic');
+  t.style.cssText=`font-size:${S.fs}px;width:${W}px;height:${H}px;column-width:${W}px`;
+  w.appendChild(t);L.appendChild(w);st.appendChild(L);
+  const n=Math.max(1,Math.round(t.scrollWidth/W)),i=idx==='end'?n-1:idx;
+  t.style.transform=`translateX(${-i*W}px)`;return L}
+function clipHalf(poly,M,n,side){const out=[];
+  for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];
+    const da=side*((a[0]-M[0])*n[0]+(a[1]-M[1])*n[1]),db=side*((b[0]-M[0])*n[0]+(b[1]-M[1])*n[1]);
+    if(da>=0)out.push(a);
+    if((da>=0)!==(db>=0)){const k=da/(da-db);out.push([a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k])}}
+  return out}
+const poly=p=>p.length?`polygon(${p.map(q=>q[0].toFixed(1)+'px '+q[1].toFixed(1)+'px').join(',')})`:'polygon(0 0,0 0,0 0)';
+function prepare(d){
+  const st=el('div','stage');$('content').appendChild(st);setGeo();
+  let X,Y,commit;
+  if(d>0){let nb=S.b,nc=S.c,ni=P+1;
+    if(P>=N-1){const n=nextCh(1);if(!n){st.remove();return null}nb=n[0];nc=n[1];ni=0}
+    X=makeLayer(S.b,S.c,P,st);Y=makeLayer(nb,nc,ni,st);
+    commit=()=>{if(P<N-1){P++;showPage()}else chapter(1)}}
+  else{let pb=S.b,pc=S.c,pi=P-1;
+    if(P<=0){const n=nextCh(-1);if(!n){st.remove();return null}pb=n[0];pc=n[1];pi='end'}
+    X=makeLayer(pb,pc,pi,st);Y=makeLayer(S.b,S.c,P,st);
+    commit=()=>{if(P>0){P--;showPage()}else chapter(-1)}}
+  const D=Wc+Hc,su=el('div','su'),fw=el('div','fw'),fi=el('div','fi'),fsh=el('div','fsh');
+  [su,fsh].forEach(e=>{e.style.top=-D+'px';e.style.height=2*D+'px'});
+  fi.append(X.cloneNode(true),fsh);fw.appendChild(fi);st.append(Y,su,X,fw);
+  const rect=[[0,0],[Wc,0],[Wc,Hc],[0,Hc]];
+  function draw(t){
+    if(t<=0.002||t>=0.998){fw.style.display=su.style.display='none';X.style.clipPath=t<=0.002?'none':poly([]);return}
+    fw.style.display=su.style.display='';
+    const px=Wc-2*Wc*t,py=Hc-0.22*Hc*Math.sin(Math.PI*t);
+    let nx=Wc-px,ny=Hc-py;const L=Math.hypot(nx,ny);nx/=L;ny/=L;
+    const mx=(Wc+px)/2,my=(Hc+py)/2;
+    X.style.clipPath=poly(clipHalf(rect,[mx,my],[nx,ny],-1));
+    fi.style.clipPath=poly(clipHalf(rect,[mx,my],[nx,ny],1));
+    const k=2*(mx*nx+my*ny);
+    fw.style.transform=`matrix(${1-2*nx*nx},${-2*nx*ny},${-2*nx*ny},${1-2*ny*ny},${k*nx},${k*ny})`;
+    const tr=`translate(${mx}px,${my}px) rotate(${Math.atan2(ny,nx)*180/Math.PI}deg)`;
+    su.style.transform=tr;fsh.style.transform=tr}
+  return {st,draw,commit,d,t0:d>0?0:1,t1:d>0?1:0,t:d>0?0:1}}
+function animate(s,from,to,ms,done){const t0=performance.now();
+  (function f(now){let k=Math.min(1,(now-t0)/ms);k=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+    s.t=from+(to-from)*k;s.draw(s.t);if(now-t0<ms)requestAnimationFrame(f);else done()})(t0)}
+function finish(s,ok){if(ok)s.commit();s.st.remove();$('pg').style.visibility='';busy=false}
+function turn(d){if(!flipMode()){chapter(d);return}
+  if(busy)return;const s=prepare(d);if(!s)return;
+  busy=true;$('pg').style.visibility='hidden';s.draw(s.t0);
+  animate(s,s.t0,s.t1,700,()=>finish(s,true))}
+let drag=null;const ct=$('content');
+ct.addEventListener('pointerdown',e=>{if(!flipMode()||busy||(e.pointerType==='mouse'&&e.button))return;drag={x:e.clientX,y:e.clientY,s:null}});
+ct.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.s){if(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy))return;
+    const s=prepare(dx<0?1:-1);if(!s){drag=null;return}
+    drag.s=s;busy=true;$('pg').style.visibility='hidden';try{ct.setPointerCapture(e.pointerId)}catch(_){}}
+  const s=drag.s,span=0.85*Wc;
+  s.t=s.d>0?Math.min(1,Math.max(0,-dx/span)):1-Math.min(1,Math.max(0,dx/span));s.draw(s.t)});
+function endDrag(){if(!drag)return;const s=drag.s;drag=null;if(!s)return;
+  const ok=s.d>0?s.t>0.3:s.t<0.7;
+  animate(s,s.t,ok?s.t1:s.t0,Math.max(180,380*Math.abs((ok?s.t1:s.t0)-s.t)+120),()=>finish(s,ok))}
+ct.addEventListener('pointerup',endDrag);ct.addEventListener('pointercancel',endDrag);
+function curVerse(){if(S.sel)return +S.sel;const ps=document.querySelectorAll('#txt p[data-v]');
+  if(flipMode()){const r=$('pg').getBoundingClientRect();
+    for(const p of ps)if([...p.getClientRects()].some(q=>q.right>r.left+4&&q.left<r.right-4))return +p.dataset.v;return 1}
+  const h=$('top').offsetHeight;for(const p of ps)if(p.getBoundingClientRect().bottom>h+10)return +p.dataset.v;return 1}
+let pickB=null;
+function books(){pickB=null;$('pkt').textContent='Choose a book';$('pkb').className='list';
+  $('pkb').innerHTML=BOOKS.map(b=>`<button data-b="${b[0]}">${b[1]}</button>`).join('')}
+function chaps(b){pickB=b;$('pkt').textContent=book(b)[1];$('pkb').className='grid';
+  $('pkb').innerHTML=Array.from({length:book(b)[2]},(_,i)=>`<button data-c="${i+1}">${i+1}</button>`).join('')}
+$('title').onclick=()=>{$('pk').hidden=false;books()};
+$('pkx').onclick=()=>{if(pickB)books();else $('pk').hidden=true};
+$('pkb').onclick=e=>{const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.bd!==undefined){S.bms.splice(+t.dataset.bd,1);persist();bmList();return}
+  if(t.dataset.bg!==undefined){const x=S.bms[+t.dataset.bg];$('pk').hidden=true;go(x.b,x.c,x.v,1);return}
+  if(t.dataset.b)chaps(t.dataset.b);else{$('pk').hidden=true;go(pickB,+t.dataset.c)}};
+$('txt').onclick=e=>{const p=e.target.closest('p[data-v]');if(!p)return;
+  S.sel=S.sel==p.dataset.v?null:p.dataset.v;persist();
+  document.querySelectorAll('#txt p').forEach(x=>x.classList.toggle('sel',x.dataset.v==S.sel))};
+$('bk').onclick=()=>{S.bm={b:S.b,c:S.c,v:curVerse()};
+  S.bms=S.bms.filter(x=>!(x.b===S.bm.b&&x.c===S.bm.c&&x.v===S.bm.v));S.bms.unshift(Object.assign({t:Date.now()},S.bm));persist();
+  $('bmtxt').textContent='🔖 Last Saved: '+book(S.bm.b)[1]+' '+S.bm.c+':'+S.bm.v;
+  toast('Bookmarked '+book(S.b)[1]+' '+S.c+':'+S.bm.v);
+  $('bk').classList.add('on');setTimeout(()=>$('bk').classList.remove('on'),1500)};
+function bmList(){pickB=null;$('pkt').textContent='Bookmarks';$('pkb').className='';
+  $('pkb').innerHTML=S.bms.length?S.bms.map((x,i)=>`<div class="bml"><button class="go" data-bg="${i}">${book(x.b)[1]} ${x.c}:${x.v}${x.t?`<small>${new Date(x.t).toLocaleDateString()}</small>`:''}</button><button class="del" data-bd="${i}" aria-label="Delete bookmark">🗑</button></div>`).join(''):'<div class="empty">No bookmarks yet.<br>Tap the 🔖 button to save your place.</div>'}
+$('bl').onclick=()=>{$('pk').hidden=false;bmList()};
+$('fonts').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=curVerse();S.font=b.dataset.f;persist();
+  const f=fontDef();(document.fonts?document.fonts.load('18px '+f[2]).catch(()=>{}):Promise.resolve()).then(()=>go(S.b,S.c,v))};
+$('bmtxt').onclick=()=>go(S.bm.b,S.bm.c,S.bm.v,1);
+$('prev').onclick=()=>chapter(-1);$('next').onclick=()=>chapter(1);
+$('pp').onclick=()=>turn(-1);$('pnx').onclick=()=>turn(1);
+$('gear').onclick=()=>{$('set').hidden=false};
+$('set').onclick=e=>{if(e.target.id==='set')$('set').hidden=true};
+document.querySelectorAll('.seg [data-m]').forEach(b=>b.onclick=()=>{const v=curVerse();S.mode=b.dataset.m;go(S.b,S.c,v);$('set').hidden=true});
+const size=d=>{const v=curVerse();S.fs=Math.min(30,Math.max(14,S.fs+d));go(S.b,S.c,v)};
+$('fm').onclick=()=>size(-2);$('fp').onclick=()=>size(2);
+document.addEventListener('keydown',e=>{if(!flipMode())return;if(e.key==='ArrowRight')turn(1);if(e.key==='ArrowLeft')turn(-1)});
+window.addEventListener('resize',()=>{if(flipMode()){const v=curVerse();go(S.b,S.c,v)}});
+fetch('nt.json').then(r=>r.json()).catch(()=>window.NT_SAMPLE||{}).then(d=>{NT=d;render();if(document.fonts)document.fonts.ready.then(()=>{if(flipMode())go(S.b,S.c,curVerse())})});
+</script></body></html>
